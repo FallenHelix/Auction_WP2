@@ -1,8 +1,6 @@
 <?php
 $email = $title = $description = '';
 $errors = array('email' => '', 'title' => '', 'description' => '');
-
-
 if (isset($_POST['submit'])) {
 
 	// check email
@@ -13,6 +11,9 @@ if (isset($_POST['submit'])) {
 		if (!filter_var($email,)) {
 			$errors['email'] = 'Email must be a valid email address';
 		}
+		else{
+			$_SESSION['email'] = $email;
+		}
 	}
 	// check title
 	if (empty($_POST['title'])) {
@@ -21,6 +22,8 @@ if (isset($_POST['submit'])) {
 		$title = $_POST['title'];
 		if (!preg_match('/^[a-zA-Z\s]+$/', $title)) {
 			$errors['title'] = 'Title must be letters and spaces only';
+		}else{
+			$_SESSION['title'] = $title ; 
 		}
 	}
 
@@ -30,8 +33,13 @@ if (isset($_POST['submit'])) {
 	if(array_filter($errors)){
 		echo "errors in the form!!";
 	}else{
-		echo "Form is Valid !! "  ; 
+		$_SESSION["description"] = $_POST['description'] ;
 
+		$date =  $_POST['date'];
+		$timestamp = date('Y-m-d H:i:s', strtotime($date));  
+		$_SESSION['timestamp'] = $timestamp ; 
+		echo "Form is Valid !! "  ; 
+        header('Location: details.php');
 	}
 } // end POST check
 
