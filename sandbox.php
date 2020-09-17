@@ -25,7 +25,7 @@
 </head>
 <body>
 
-	<form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
+	<form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">	
 		<input type="text" name="name">
 		<select name="gender">
 			<option value="male">male</option>
