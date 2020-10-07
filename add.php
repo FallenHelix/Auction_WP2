@@ -69,7 +69,7 @@ if (isset($_POST['submit'])) {
 	<h4 class="center">Add a new Auction Item</h4>
 	<h1 class="blueW" > This Should be in blue!!! </h1>
 
-	<form class="white" action="add.php" method="POST">
+	<form class="white" action="addAuction.php" method="POST">
 		<label>Your Email</label>
 		<input type="text" name="email" value="<?php echo htmlspecialchars($email) ?>">
 		<div class="red-text"><?php echo $errors['email']; ?></div>
