@@ -64,6 +64,7 @@ function login_user(){
 				$_SESSION['logged_in'] = true ; 
 				$_SESSION['user_image'] = $row["profile_pic"] ; 
 				$_SESSION['name'] = $row['name'] ; 
+				$_SESSION["user_id"] =  $row['id'] ; 
 				header('Location: home.php?login=success');
 				exit() ; 
 

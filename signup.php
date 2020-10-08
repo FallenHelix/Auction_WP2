@@ -92,9 +92,9 @@ if (isset($_POST['submit'])) {
 
 		$name = $fname . " " . $lname;
 		if ($file_name == "") {
-			$img_dir = "images/users/$email.png";
+			$img_dir = "images/users/$email.$file_name";
 		} else {
-			$img_dir = "images/users/$email.png";
+			$img_dir = "images/users/$email.$file_name";
 		}
 		$sql = "INSERT INTO users (name, email, password, profile_pic) VALUES (?, ?, ?, ?)";
 		$stmt = mysqli_stmt_init($conn);
