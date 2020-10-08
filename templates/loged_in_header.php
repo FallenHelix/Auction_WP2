@@ -1,3 +1,19 @@
+<?php
+	if(!isset($_SESSION)) 
+	{ 
+		session_start(); 
+	} 
+	if(isset($_SESSION)) {
+		$auth = $_SESSION['logged_in'] ?? false ;
+		if(!$auth){
+			header("Location: login.php") ; 
+			exit() ; 
+		}
+		$user_img = $_SESSION['user_image'] ?? "";
+		$round_image = '<a href="#"><img alt="icons/default.png" src ='.$user_img.' class="circular"></a>' ;
+	}
+
+?>
 <head>
 	<title>Auction Ninja</title>
 	<!-- Compiled and minified CSS -->
@@ -40,5 +56,9 @@
       </ul>
     </div>
 		<a href="#"><img src="icons/down-arrow.svg" class="arrow"></a>
-		<a href="#"><img src="icons/default.png" class="circular"></a>
+
+    <?php
+		echo $round_image??"" ; 
+		echo $_SESSION["loged_in"] ?? "" ; 
+        ?>
   </nav>
