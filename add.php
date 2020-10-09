@@ -1,19 +1,10 @@
 <?php
-$email = $title = $description = '';
-$errors = array('email' => '', 'title' => '', 'description' => '');
+$email = $title = $description = $enddate = '';
+$errors = array('title' => '', 'description' => '', 'enddate' => '');
 
 
 if (isset($_POST['submit'])) {
 
-	// check email
-	if (empty($_POST['email'])) {
-		$errors['email'] = 'An email is required';
-	} else {
-		$email = $_POST['email'];
-		if (!filter_var($email,)) {
-			$errors['email'] = 'Email must be a valid email address';
-		}
-	}
 	// check title
 	if (empty($_POST['title'])) {
 		$errors['title'] = 'A title is required';
@@ -27,11 +18,15 @@ if (isset($_POST['submit'])) {
 	if (empty($_POST['description'])) {
 		$errors['description'] = 'A Description is required';
 	}
+
+	if (empty($_POST['enddate'])) {
+		$errors['enddate'] = 'End Date is required';
+		$enddate = 'End Date is required';
+	}
 	if(array_filter($errors)){
 		echo "errors in the form!!";
 	}else{
-		echo "Form is Valid !! "  ; 
-
+		echo "Form is Valid !! "  ;
 	}
 } // end POST check
 
@@ -46,20 +41,15 @@ if (isset($_POST['submit'])) {
 
 <section class="container grey-text">
 	<h4 class="center">Add a new Auction Item</h4>
-
 	<form class="white" action="add.php" method="POST">
-		<label>Your Email</label>
-		<input type="text" name="email" value="<?php echo htmlspecialchars($email) ?>">
-		<div class="red-text"><?php echo $errors['email']; ?></div>
 		<label>Auction Title</label>
 		<input type="text" name="title" value="<?php echo htmlspecialchars($title) ?>">
 		<div class="red-text"><?php echo $errors['title']; ?></div>
-		<label>Description of the Autction Item </label>
-
+		<label>Description of the Auction Item </label>
 		<input type="text" name="description" value="<?php echo htmlspecialchars($description) ?>">
 		<div class="red-text"><?php echo $errors['description']; ?></div>
-		<label>Enter The Duration of Auction : </label>
-		<input type="number" name="days" value="<?php echo htmlspecialchars($days) ?>" >	
+		<label>Enter duration of the auction : </label>
+		<input type="number" name="enddate" value="<?php echo htmlspecialchars($enddate) ?>" >
 		<div class="center">
 		<input type="submit" name="submit" value="Submit" class="btn brand z-depth-0">
 		</div>

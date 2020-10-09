@@ -1,101 +1,93 @@
-
-
-<html>
-<?php include('templates/header.php'); ?>
-<title>Login</title>
-<style>
-.error {color: #FF0000;}
-body {background-color: lightgreen;}
-h1   {color: black;
-     font-family: verdana;
-     font-size: 200%;}
-p    {color: blue;
-     font-family: verdana;
-     font-size: 160%;}
-p1   {color: green;
-     font-family: courier;
-     font-size: 160%;}
-input[type=text] {
-  border: 2px solid blue;
-  border-radius: 4px;
-}
-input[type=email] {
-  border: 2px solid blue;
-  border-radius: 4px;
-}
-input[type=password] {
-  border: 2px solid blue;
-  border-radius: 4px;
-}
-input[type=number] {
-  border: 2px solid blue;
-  border-radius: 4px;
-}
-div {
-  background-color: white;
-  width: 500px;
-
-  margin: 20px;
-}
-
-</style>
-<body>
-
 <?php
-$cookie_name = 'email';
-$cookie_name1 = 'fname';
-$cookie_name2 = 'lname';
+session_start();
+session_unset();
+include('templates/header.php');
+$email = $password = '';
+	$errors = array('email' => '', 'password' => '');
 
+	if(isset($_POST['submit'])){
 
+		require 'templates/db.php';
 
-$emailErr = '';
-$passwordErr = '';
+    if(empty($_POST['email'])){
+			$errors['email'] = 'An email is required';
+		} else{
+			$email = $_POST['email'];
+			if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+				$errors['email'] = 'Email must be a valid email address';
+			}
+		}
 
-if(isset($_POST['email']))
-{
-if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
-{
-  $emailErr = "Invalid email format";
-}
-else
-{
-  $emailErr = ' ';
-}
-}
+    if (empty($_POST["password"])){
+      $errors['password'] = 'Password is required';
+    }
+    else {
+      $password=  $_POST['password'];
 
-if(isset($_POST["password"]))
-{
-if (empty($_POST["password"])) 
-{
-  $passwordErr = "Enter correct password";
-} 
-else 
-{
-  $passwordErr = ' ';
-}
-}
+			$sql = "SELECT * FROM users WHERE email=?";
+			$stmt = mysqli_stmt_init($conn);
+			if (!mysqli_stmt_prepare($stmt, $sql)) {
+				header("Location: http://localhost/WP2_Auction/Auction/login.php?error=sqlerror");
+				exit();
+			}
+			else {
+				mysqli_stmt_bind_param($stmt, "s", $email);
+				mysqli_stmt_execute($stmt);
+				$result = mysqli_stmt_get_result($stmt);
+				$row = mysqli_fetch_assoc($result);
+				if ($row) {
+					$password_check = password_verify($password, $row['password']);
+					if ($password_check == false) {
+						$errors['password'] = 'Incorrect Password';
+					}
+				}
+				else {
+					$errors['email'] = 'No User has been created with this email';
+				}
+			}
+    }
 
-if($emailErr == ' ' && $passwordErr == ' ')
-{
-  header("Location: http://localhost/programs/homepage.php");
-}
+    if(!array_filter($errors)){
+
+			//session_start();
+			$_SESSION['user_id'] = $row["user_id"];
+			$_SESSION['profile_pic'] = $row["profile_pic"];
+			$_SESSION['name'] = $row['name'];
+
+			mysqli_stmt_close($stmt);
+
+			if (isset($_SESSION['user_id'])) {
+				header('Location: home.php');
+				echo $_SESSION['name'];
+			}
+    }
+		mysqli_close($conn);
+  }
 
 ?>
-<section class="container grey-text">
-<center>
-  <h4 class="center">Enter your details</h4>
-  <div>
-  <form method = "post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-  <br><br>
-  Enter your email <input type="email" name="email"><span class="error">*<?php echo $emailErr;?></span>
-  <br><br>
-  Enter your password <input type="password" name="password"><span class="error">*<?php echo $passwordErr;?></span>
-  <br><br>
-  <input type="submit" name="submit" value="Submit" class="btn brand z-depth-0">
-</form>
-</div>
-</center>
-</section>
-</body>
-<?php include('templates/footer.php'); ?>
+
+<!DOCTYPE html>
+<html>
+	<section class="container grey-text">
+		<h2 class="brand-logo brand-text center">Login</h2><br>
+		<h4 class="center">Enter your details</h4>
+		<form class="white" action="login.php" method="POST">
+			<label>Email</label>
+			<input type="email" name="email" value="<?php echo htmlspecialchars($email) ?>">
+      <div class="red-text"><?php echo $errors['email']; ?></div>
+      <label>Password</label>
+			<input type="password" name="password" value="<?php echo htmlspecialchars($password) ?>">
+      <div class="red-text"><?php echo $errors['password']; ?></div>
+			<div class="center">
+				<input type="submit" name="submit" value="Submit" class="btn brand z-depth-0"><br><br>
+				<div class="border-top pt-3">
+	        <small class="text-muted">
+	            New User? <a class="ml-2" href="signup.php">Sign Up</a>
+	        </small>
+			</div>
+		</form>
+	</section>
+
+	<?php include('templates/footer.php'); ?>
+
 </html>
