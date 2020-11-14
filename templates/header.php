@@ -55,7 +55,7 @@
 		<?php
 			if (isset($_SESSION['user_id'])) {
 				echo '<ul id = "dropdown" class = "dropdown-content">
-		       <li><a href = "#" class="brand-text" style="font-size:12px">Edit Account</a></li>
+		       <li><a href = "edit_account.php" class="brand-text" style="font-size:12px">Edit Account</a></li>
 		       <li><a href = "logout.php" class="brand-text" style="font-size:12px">Logout</a></li>
 		    </ul>
 

@@ -53,12 +53,12 @@ $email = $password = '';
 			$_SESSION['user_id'] = $row["user_id"];
 			$_SESSION['profile_pic'] = $row["profile_pic"];
 			$_SESSION['name'] = $row['name'];
+			$_SESSION['email'] = $row['email'];
 
 			mysqli_stmt_close($stmt);
 
 			if (isset($_SESSION['user_id'])) {
 				header('Location: home.php');
-				echo $_SESSION['name'];
 			}
     }
 		mysqli_close($conn);
