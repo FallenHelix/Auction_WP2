@@ -1,6 +1,15 @@
 <head>
 	<title>Auction Ninja</title>
 	<!-- Compiled and minified CSS -->
+	<meta name = "viewport" content = "width = device-width, initial-scale = 1">
+      <link rel = "stylesheet"
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel = "stylesheet"
+         href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+      <script type = "text/javascript"
+         src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js">
+      </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <style type="text/css">
 	  .brand{
@@ -30,6 +39,11 @@
 		top: 2px;
 		padding: 10px
 	}
+	#login-pos {
+  font-size: 20px;
+	 margin: auto 10px;
+}
+
   </style>
 </head>
 <body class="grey lighten-4">
@@ -39,6 +53,28 @@
       <ul id="nav-mobile" class="right hide-on-small-and-down">
       </ul>
     </div>
-		<a href="#"><img src="icons/down-arrow.svg" class="arrow"></a>
-		<a href="#"><img src="icons/default.png" class="circular"></a>
+
+
+		<?php
+			if (isset($_SESSION['user_id'])) {
+				echo '<ul id = "dropdown" class = "dropdown-content">
+		       <li><a href = "edit_account.php" class="brand-text" style="font-size:12px">Edit Account</a></li>
+		       <li><a href = "logout.php" class="brand-text" style="font-size:12px">Logout</a></li>
+		    </ul>
+
+				<a class="dropdown-button" style="float:right" data-activates = "dropdown"><img src="icons/down-arrow.svg" class="arrow"></a>
+				<a href="#"><img src="' . $_SESSION['profile_pic'] . '" class="circular"></a>';
+			}
+			else {
+				if (basename($_SERVER['PHP_SELF']) == 'login.php') {
+					echo '<a href = "signup.php" class="brand-text" id="login-pos" style="float:right">Sign Up</a></li>';
+				}
+				else {
+					echo '<a href = "login.php" class="brand-text" id="login-pos" style="float:right">Login</a></li>';
+				}
+
+			}
+		 ?>
+
   </nav>
+</body>

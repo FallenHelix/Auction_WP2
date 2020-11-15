@@ -1,4 +1,5 @@
 <?php
+
 	session_start();
 	if(empty($_SESSION['logged_in']))
 	{
@@ -8,6 +9,7 @@
 	
 ?>
 <?php
+
 $email = $title = $description = $enddate = '';
 $errors = array('title' => '', 'description' => '', 'enddate' => '');
 

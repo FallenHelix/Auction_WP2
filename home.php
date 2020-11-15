@@ -1,4 +1,9 @@
 <html>
+<?php
+session_start();
+include('templates/header.php');
+?>
+
 <?php include('templates/loged_in_header.php'); ?>
 <title>Home Page</title>
 <body>
@@ -24,11 +29,13 @@
           <img src="icons/object.svg" style="width:250px;height:250px;"></div>
 					</div>
           <div class="card-action center">
-						<a class="brand-text" href="add.php">Want to add items for auction? <br> Click here!</a>
+						<a class="brand-text" href="http://localhost/programs/add.php">Want to add items for auction? <br> Click here!</a>
+
 					</div>
 				</div>
 			</div>
     </div>
   </div>
 </body>
+<?php include('templates/footer.php'); ?>
 </html>

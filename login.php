@@ -1,7 +1,6 @@
 <?php
 session_start();
-
-
+session_unset();
 $email = $password = '';
 $errors = array('email' => '', 'password' => '');
 
@@ -78,6 +77,7 @@ function login_user(){
 	}
 
 }
+
 
 ?>
 

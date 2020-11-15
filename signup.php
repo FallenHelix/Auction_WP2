@@ -1,4 +1,5 @@
 <?php
+
 $fname = $lname = $email = $password = $confirm_password = '';
 $errors = array('fname' => '', 'lname' => '', 'email' => '', 'password' => '', 'confirm_password' => '', 'profile_pic' => '');
 
@@ -35,6 +36,7 @@ if (isset($_POST['submit'])) {
 		$sql = "SELECT email FROM users WHERE email=?";
 		$stmt = mysqli_stmt_init($conn);
 		if (!mysqli_stmt_prepare($stmt, $sql)) {
+
 			header("Location: signup.php?error=sqlerror");
 			exit();
 		} else {
@@ -48,6 +50,7 @@ if (isset($_POST['submit'])) {
 			mysqli_stmt_close($stmt);
 		}
 	}
+
 
 	if (empty($_POST["password"])) {
 		$errors['password'] = 'Password is required';
@@ -95,10 +98,12 @@ if (isset($_POST['submit'])) {
 			$img_dir = "images/users/$email.$file_name";
 		} else {
 			$img_dir = "images/users/$email.$file_name";
+
 		}
 		$sql = "INSERT INTO users (name, email, password, profile_pic) VALUES (?, ?, ?, ?)";
 		$stmt = mysqli_stmt_init($conn);
 		if (!mysqli_stmt_prepare($stmt, $sql)) {
+
 			header("Location: signup.php?error=sqlerror111");
 			exit();
 		} else {
@@ -118,6 +123,7 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE html>
 <html>
+
 <style media="screen">
 	.custom-file-input::-webkit-file-upload-button {
 		visibility: hidden;
@@ -136,6 +142,7 @@ if (isset($_POST['submit'])) {
 		text-shadow: 1px 1px #fff;
 		font-weight: 700;
 		font-size: 10pt;
+
 	}
 
 	.custom-file-input:hover::before {
@@ -180,3 +187,4 @@ if (isset($_POST['submit'])) {
 <?php include('templates/footer.php'); ?>
 
 </html>
+
