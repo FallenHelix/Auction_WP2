@@ -1,9 +1,11 @@
 <?php
 
-$username = "bharat";
-$password = "bharat@26";
+
+$username = "admin";
+$password = "admin";
 $server = "localhost";
-$database = "auction_ninja";
+$database = "auction";
+
 
 $conn = mysqli_connect($server, $username, $password, $database);
 

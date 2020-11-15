@@ -10,6 +10,7 @@
          src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
       <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js">
       </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <style type="text/css">
 	  .brand{
 	  	background: #cbb09c !important;
@@ -42,6 +43,7 @@
   font-size: 20px;
 	 margin: auto 10px;
 }
+
   </style>
 </head>
 <body class="grey lighten-4">
@@ -51,6 +53,7 @@
       <ul id="nav-mobile" class="right hide-on-small-and-down">
       </ul>
     </div>
+
 
 		<?php
 			if (isset($_SESSION['user_id'])) {
