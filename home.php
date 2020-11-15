@@ -4,7 +4,7 @@ session_start();
 include('templates/header.php');
 ?>
 
-<?php include('templates/loged_in_header.php'); ?>
+
 <title>Home Page</title>
 <body>
   <br><br>

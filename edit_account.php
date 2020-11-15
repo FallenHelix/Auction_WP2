@@ -2,7 +2,7 @@
 session_start();
 include('templates/header.php');
 require 'templates/db.php';
-$sql = "SELECT * FROM users WHERE email=?";
+$sql = "SELECT * FROM users WHERE email= ? ";
 $stmt = mysqli_stmt_init($conn);
 if (!mysqli_stmt_prepare($stmt, $sql)) {
   header("Location: http://localhost/WP2_Auction/Auction/edit_acoount.php?error=sqlerror");
@@ -163,7 +163,7 @@ if(isset($_POST['submit'])){
 			<input type="text" name="lname" value="<?php echo htmlspecialchars($lname) ?>">
       <div class="red-text"><?php echo $errors['lname']; ?></div>
 			<label>Email</label>
-			<input type="email" name="email" value="<?php echo htmlspecialchars($email) ?>">
+			<input type="email" name="email" disabled value="<?php echo htmlspecialchars($email) ?>">
       <div class="red-text"><?php echo $errors['email']; ?></div>
       <label>Password</label>
 			<input type="password" name="password" value="<?php echo htmlspecialchars($password) ?>">

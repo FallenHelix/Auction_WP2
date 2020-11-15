@@ -59,11 +59,12 @@ function login_user(){
 				exit() ;
 			}
 			else if($password_check){
-
+				$_SESSION['email'] = $row['email'] ; 
 				$_SESSION['logged_in'] = true ; 
 				$_SESSION['user_image'] = $row["profile_pic"] ; 
 				$_SESSION['name'] = $row['name'] ; 
 				$_SESSION["user_id"] =  $row['id'] ; 
+				$_SESSION['profile_pic'] = $row['profile_pic'] ; 
 				header('Location: home.php?login=success');
 				exit() ; 
 
