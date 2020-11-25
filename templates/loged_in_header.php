@@ -1,12 +1,14 @@
 <?php
-	if(!isset($_SESSION)) 
+	if(!session_status()) 
 	{ 
+		
 		session_start(); 
 	} 
 	if(isset($_SESSION)) {
 		$auth = $_SESSION['logged_in'] ?? false ;
 		if(!$auth){
-			header("Location: login.php") ; 
+			// header("Location: login.php") ;
+			echo "<h1> AUTH is False</h1>" ;  
 			exit() ; 
 		}
 		$user_img = $_SESSION['user_image'] ?? "";

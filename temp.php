@@ -26,12 +26,12 @@ if (isset($_POST['submit'])) {
 
 	//Parse date
 	if(!empty($_POST['date'])){
-	$date = date('Y-m-d' ,strtotime($_POST['date']));
-	$curr_date = date('Y-m-d');
+	$date = $_POST['date'] ;
+	$curr_date = date('Y-M-D');
 	 
-	if($date < $curr_date){
-		$errors['date'] = 'End Date is Invalid!!' ; 
-	}
+	// if($date < $curr_date){
+	// 	$errors['date'] = 'End Date is Invalid!!' ; 
+	// }
 }
 
 
@@ -102,30 +102,34 @@ if (isset($_POST['submit'])) {
     
     
     if (!array_filter($errors)) {
-		if(!isset($_SESSION)) 
-		{ 
-			session_start(); 
-		} 
+		// if(!isset($_SESSION)) 
+		// { 
+		// 	session_start(); 
+		// }
+
 		$user_id = $_SESSION['user_id'] ?? 60;
 
 		
-        $sql =   "INSERT INTO auction_detail (title , description, url, category  ,user_id , due) VALUES (?, ?, ?, ?	,?, ?)" ;
+        $sql =   "INSERT INTO auction_detail (title , description, url, category  ,user_id, due) VALUES (?, ?, ?, ?	,?,?)" ;
         $stmt = mysqli_stmt_init($conn);
         if (!mysqli_stmt_prepare($stmt, $sql)) {
 			header("Location: add_new.php?error=sqlerror1");
 			exit();
 		} else{
-			$cdate = $_POST['date'] ;
-            mysqli_stmt_bind_param($stmt, "ssssss", $title, $description, $img_dir, $category , $user_id , $cdate);
+			
+			// mysqli_stmt_bind_param($stmt, "ssssss", $title, $description, $img_dir, $category , $user_id , $date);
+			$date = "2020-10-10" ;
+            mysqli_stmt_bind_param($stmt, "ssssss", $title, $description, $img_dir, $category , $user_id , $date);
 			mysqli_stmt_execute($stmt);
 
+			echo "<h1>DONE".$date."</h1>";
+
 			header('Location: home.php');
-			echo "<h1>".$cdate."</h1" ; 
 		}
 		mysqli_stmt_close($stmt) ;
 
 
-	} else {
+	}	else {
 		mysqli_close($conn) ; 
 		$_SESSION["description"] = $_POST['description'];
 		$date =  $_POST['date'];
@@ -216,6 +220,7 @@ if (isset($_POST['submit'])) {
 		<div class="center">
 			<input type="submit" name="submit" value="submit" class="btn brand z-depth-0">
 		</div>
+
 	</form>
 </section>
 

@@ -57,7 +57,9 @@ include("templates/db.php");
                             
 						</div>
 						<div class="card-action right-align">
-							<a class="brand-text" href="#">more info</a>
+                    
+
+                            <?php  echo '<a class="brand-text" href="product.php?link=' . $row['id'] . '">More Info</a>'; ?>
 						</div>
 					</div>
 				</div>
