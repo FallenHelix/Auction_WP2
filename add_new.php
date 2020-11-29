@@ -5,7 +5,8 @@ function append_string ($str1, $str2){
       
     // Using Concatenation assignment 
     // operator (.) 
-    $str = $str1 . $str2; 
+	$str = $str1 . $str2; 
+	
       
     // Returning the result  
     return $str; 
@@ -120,8 +121,8 @@ if (isset($_POST['submit'])) {
 
 			header('Location: home.php');
 		}
-		mysqli_stmt_close($stmt) ;
-
+		mysqli_stmt_close($stmt) ; 
+		
 
 	} else {
 		mysqli_close($conn) ; 
