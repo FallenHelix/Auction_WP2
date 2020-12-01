@@ -29,7 +29,7 @@ include('templates/header.php');
           <img src="icons/object.svg" style="width:250px;height:250px;"></div>
 					</div>
           <div class="card-action center">
-						<a class="brand-text" href="add_new.php">Want to add items for auction? <br> Click here!</a>
+						<a class="brand-text" href="add.php">Want to add items for auction? <br> Click here!</a>
 
 					</div>
 				</div>

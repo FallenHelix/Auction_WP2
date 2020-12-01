@@ -1,9 +1,5 @@
 <?php
-	if(!session_status()) 
-	{ 
-		
-		session_start(); 
-	} 
+	session_start() ;
 	if(isset($_SESSION)) {
 		$auth = $_SESSION['logged_in'] ?? false ;
 		if($auth != 1){

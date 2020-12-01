@@ -38,6 +38,9 @@ include("templates/db.php");
     .custom-file-input:active::before {
         background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
     }
+    .bold{
+        font-weight: 700;
+    }
 
     #item-image {
         position: relative;
@@ -70,33 +73,15 @@ if (!mysqli_stmt_prepare($stmt, $sql)) {
 ?>
 
 <section class="row container grey-text center">
-    <div class="col s6 ">
+    
 
-        <h4 class="center">Item Detail</h4>
-
-        <form class="white" action="add_bid.php" method="POST" enctype="multipart/form-data">
-            <div class="white" id="item-image">
-                <img src="images/gym.jpg"><br>
-                <p><?php echo htmlspecialchars($row['title']);  ?></p>
-                <p>Category : <?php echo htmlspecialchars($row['category']);  ?></p>
-                <p>Description : <?php echo htmlspecialchars($row['description']);  ?></p>
-                <p>Minimum value: Rs <?php echo htmlspecialchars($row['base_amount']);  ?></p>
-                <p>End Date <?php echo htmlspecialchars($row['due']);  ?></p>
-                <br><br>
-                <label>Enter value</label>
-                <input type="number" name="amount" placeholder="100">
-                <div class="center">
-                    <input type="submit" name="submit" value="submit" class="btn brand z-depth-0">
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <div class="col s6 ">
+    <div class="center ">
         <h3>Bids For this Item</h3>
 
         <?php
-        $bid_sql = "SELECT * FROM bids WHERE p_id = ? ORDER BY amount DESC LIMIT 5";
+
+    $bid_sql= "SELECt * from bids LEFT OUTER JOIN   users on u_id = id where p_id = ? " ;
+        // $bid_sql = "SELECT * FROM bids WHERE p_id = ? ORDER BY amount DESC LIMIT 5";
         if (!mysqli_stmt_prepare($stmt, $bid_sql)) {
             header("Location: login.php?error=sqlerror");
             exit();
@@ -111,6 +96,10 @@ if (!mysqli_stmt_prepare($stmt, $sql)) {
 
                 <div class="whilte">
                     <p><?php echo $idx.") ". htmlspecialchars($row2['amount']);  ?></p>
+
+                    <span class="bold"><?php echo  htmlspecialchars($row2['email']);  ?></span>
+
+                    <span class=""><?php echo  htmlspecialchars($row2['name']);  ?></span>
                 </div>
 
         <?php

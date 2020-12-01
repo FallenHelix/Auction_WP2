@@ -20,10 +20,9 @@ include("templates/db.php");
 <div class="container">
 		<div class="row">
     <?php
-    $all_acutions = 'SELECT * from auction_detail where user_id = ? ORDER BY timestamp DESC';
+    $all_acutions = 'SELECT * from auction_detail where user_id != ? ORDER BY timestamp DESC';
     require 'templates/db.php';
-    $email = "s@g.com";
-    $id = 7;
+    $id = $_SESSION['user_id'] ; 
     $stmt = mysqli_stmt_init($conn);
     if (!mysqli_stmt_prepare($stmt, $all_acutions)) {
         header("Location: login.php?error=sqlerror");
@@ -47,7 +46,8 @@ include("templates/db.php");
 							<h6><?php echo htmlspecialchars($row['title']); ?></h6>
                             <div><?php echo htmlspecialchars($row['description']); ?></div>
                             <div><?php echo htmlspecialchars($row['category']   ); ?></div> 
-
+                            <div>Rs <?php echo htmlspecialchars($row['base_amount']   ); ?></div> 
+                            <div>Last Date : <?php $date = date_create($row['due']) ;  echo htmlspecialchars(date_format($date, "d/M/Y l"   )); ?></div> 
                             <!-- <ul>
                                 <?php foreach(explode(" " , $row['category']) as $cat) { ?>
                                 <li><?php echo htmlspecialchars($cat) ?></li>
@@ -57,8 +57,6 @@ include("templates/db.php");
                             
 						</div>
 						<div class="card-action right-align">
-                    
-
                             <?php  echo '<a class="brand-text" href="product.php?link=' . $row['id'] . '">More Info</a>'; ?>
 						</div>
 					</div>
@@ -75,6 +73,7 @@ include("templates/db.php");
                     </div>
                 </div> -->
         <?php 
+        // var_dump($row) ; 
     }} ?>
         </div>
 </div>

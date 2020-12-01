@@ -1,4 +1,7 @@
 <?php
+	
+include('templates/loged_in_header.php');
+	$logged = $_SESSION['logged_in'] ?? 0 ; 
 $email = $title = $description = ''; $base_amount ='' ; 
 $errors = array('email' => '', 'title' => '', 'description' => '', 'date' =>'' , 'product_pic'=>'', 'base_amount' => '');
 function append_string ($str1, $str2){ 
@@ -26,6 +29,11 @@ if (isset($_POST['submit'])) {
 	}
 	if(empty($_POST['base_amount'])){
 		$errors['base_amount'] = 'Enter Valid amount' ; 
+	}else{
+		$base_amount = $_POST['base_amount'] ; 
+		if($base_amount < 0){
+			$errors['base_amount'] = 'Enter Valid amount' ;
+		} 
 	}
 //Parse date
 	if(!empty($_POST['date'])){
@@ -110,18 +118,21 @@ if (isset($_POST['submit'])) {
 			session_start(); 
 		} 
 		$user_id = $_SESSION['user_id'] ?? 60;
-
-		
-        $sql =   "INSERT INTO auction_detail (title , description, url, category  ,user_id) VALUES (?, ?, ?, ?	,?)" ;
+		$cdate = $_POST['date'] ;
+        $sql =   "INSERT INTO auction_detail (title , description, url, category  ,user_id, due , base_amount) VALUES (?,?,?, ?, ?, ?	,?)" ;
         $stmt = mysqli_stmt_init($conn);
         if (!mysqli_stmt_prepare($stmt, $sql)) {
 			header("Location: add_new.php?error=sqlerror1");
 			exit();
 		} else{
-            mysqli_stmt_bind_param($stmt, "sssss", $title, $description, $img_dir, $category , $user_id);
-			mysqli_stmt_execute($stmt);
-
+            mysqli_stmt_bind_param($stmt, "sssssss", $title, $description, $img_dir, $category , $user_id, $cdate , $base_amount);
+			if(!mysqli_stmt_execute($stmt)){
+				echo "<h1> Error : " .mysqli_stmt_error($stmt) ."</h1>" ; 
+			}
+			else{
 			header('Location: home.php');
+			}
+			
 		}
 		mysqli_stmt_close($stmt) ; 
 		
@@ -140,7 +151,10 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE html>
 <html>
-<?php include('templates/loged_in_header.php'); ?>
+<?php 
+
+// session_start() ; 
+// echo "<h1>" .$_SESSION['user_id']."</h1>" ;  ?>
 <style media="screen">
 	.custom-file-input::-webkit-file-upload-button {
 		visibility: hidden;
@@ -173,7 +187,7 @@ if (isset($_POST['submit'])) {
 <section class="container grey-text">
 	<h4 class="center">Add a new Auction Item</h4>
 
-	<form class="white" action="add_new.php" method="POST" enctype="multipart/form-data">
+	<form class="white" action="add.php" method="POST" enctype="multipart/form-data">
 		
 		<label>Auction Title</label>
 		<input type="text" name="title" value="<?php echo htmlspecialchars($title) ?>">

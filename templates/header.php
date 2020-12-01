@@ -49,7 +49,7 @@
 <body class="grey lighten-4">
 	<nav class="white z-depth-0">
     <div class="container">
-      <a href="#" class="brand-logo brand-text">Auction Ninjas</a>
+      <a href="home.php" class="brand-logo brand-text">Auction Ninjas</a>
       <ul id="nav-mobile" class="right hide-on-small-and-down">
       </ul>
     </div>
@@ -59,6 +59,7 @@
 			if (isset($_SESSION['user_id'])) {
 				echo '<ul id = "dropdown" class = "dropdown-content">
 		       <li><a href = "edit_account.php" class="brand-text" style="font-size:12px">Edit Account</a></li>
+		       <li><a href = "my_products.php" class="brand-text" style="font-size:12px">My Bids</a></li>
 		       <li><a href = "logout.php" class="brand-text" style="font-size:12px">Logout</a></li>
 		    </ul>
 
