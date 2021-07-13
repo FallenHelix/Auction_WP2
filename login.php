@@ -58,6 +58,16 @@ if (isset($_POST['submit'])) {
 	}
 
 	if (!array_filter($errors)) {
+		$curr_date = date('Y-m-d');
+		$update_sql = "UPDATE products SET completed = 1 where end_date < ?";
+		if (!mysqli_stmt_prepare($stmt, $delete_sql1)) {
+			header("Location: login.php?error=sqlerror1");
+			exit();
+		} else {
+			mysqli_stmt_bind_param($stmt, "s", $curr_date);
+			mysqli_stmt_execute($stmt);
+		}
+
 		$_SESSION['logged_in'] = true ; 
 		header('Location: home.php');
 	}
