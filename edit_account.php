@@ -18,7 +18,7 @@ $fname = explode(" ",$row['name'])[0];
 $lname = explode(" ",$row['name'])[1];
 $email = $row['email'];
 $password = $confirm_password = '';
-$errors = array('fname' => '', 'lname' => '', 'email' => '', 'password' => '', 'confirm_password' => '', 'profile_pic' => '');
+$errors = array('fname' => '', 'lname' => '', 'password' => '', 'confirm_password' => '', 'profile_pic' => '');
 
 if(isset($_POST['submit'])){
 
@@ -38,15 +38,6 @@ if(isset($_POST['submit'])){
 		if(!preg_match("/^([a-zA-Z']+)$/",$_POST['lname'])){
       $errors['lname'] = 'Last Name must be valid';
     }
-	}
-
-  if(empty($_POST['email'])){
-		$errors['email'] = 'An email is required';
-	} else{
-		$email = $_POST['email'];
-		if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-			$errors['email'] = 'Email must be a valid email address';
-		}
 	}
 
   if (empty($_POST["password"])){
@@ -94,10 +85,10 @@ if(isset($_POST['submit'])){
 
 		$name = $fname . " " . $lname;
 		if($file_name=="") {
-			$img_dir = "icons/default.png";
+			$img_dir = "images/default.png";
 		}
 		else {
-			$img_dir = "icons/$file_name";
+			$img_dir = "images/$email.$file_name";
 		}
 		$sql = "UPDATE users SET name = ?, email = ?, password = ?, profile_pic = ? WHERE email = ?";
 		$stmt = mysqli_stmt_init($conn);
@@ -110,12 +101,26 @@ if(isset($_POST['submit'])){
 
 			mysqli_stmt_bind_param($stmt, "sssss", $name, $email, $hashed_password, $img_dir, $_SESSION['email']);
 			mysqli_stmt_execute($stmt);
-
-			move_uploaded_file($file_tmp, $img_dir);
+			if ($file_name != "") {
+				move_uploaded_file($file_tmp, $img_dir);	
+			}
 		}
-    $_SESSION['profile_pic'] = $img_dir;
-    $_SESSION['name'] = $name;
-    $_SESSION['email'] = $email;
+		$sql = "UPDATE bids SET name = ? WHERE name = ?";
+		$stmt = mysqli_stmt_init($conn);
+		if (!mysqli_stmt_prepare($stmt, $sql)) {
+			header("Location: http://localhost/WP2_Auction/Auction/edit_account.php?error=sqlerror");
+			exit();
+		}
+		else {
+			$hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+			mysqli_stmt_bind_param($stmt, "ss", $name, $_SESSION['name']);
+			mysqli_stmt_execute($stmt);
+		}
+		$_SESSION['email'] = $email ; 
+		$_SESSION['user_image'] = $img_dir;
+		$_SESSION['name'] = $name; 
+		$_SESSION['profile_pic'] = $img_dir;
 		mysqli_stmt_close($stmt);
     mysqli_close($conn);
     header('Location: home.php');
@@ -164,7 +169,6 @@ if(isset($_POST['submit'])){
       <div class="red-text"><?php echo $errors['lname']; ?></div>
 			<label>Email</label>
 			<input type="email" name="email" disabled value="<?php echo htmlspecialchars($email) ?>">
-      <div class="red-text"><?php echo $errors['email']; ?></div>
       <label>Password</label>
 			<input type="password" name="password" value="<?php echo htmlspecialchars($password) ?>">
       <div class="red-text"><?php echo $errors['password']; ?></div>

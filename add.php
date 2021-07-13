@@ -1,6 +1,7 @@
 <?php
-	
-include('templates/loged_in_header.php');
+	session_start(); 
+	include('templates/header.php');
+	require 'templates/db.php';
 	$logged = $_SESSION['logged_in'] ?? 0 ; 
 $email = $title = $description = ''; $base_amount ='' ; 
 $errors = array('email' => '', 'title' => '', 'description' => '', 'date' =>'' , 'product_pic'=>'', 'base_amount' => '');
@@ -20,7 +21,7 @@ if (isset($_POST['submit'])) {
 	
 	// check title
 	if (empty($_POST['title'])) {
-		$errors['title'] = 'A title is required';
+		$errors['title'] = 'Title is required';
 	} else {
 		$title = $_POST['title'];
 		if (!preg_match('/^[a-zA-Z\s]+$/', $title)) {
@@ -36,27 +37,30 @@ if (isset($_POST['submit'])) {
 		} 
 	}
 //Parse date
+	if(empty($_POST['date'])){
+		$errors['date'] = "End Date is required";
+	}
 	if(!empty($_POST['date'])){
 	$date = date('Y-m-d' ,strtotime($_POST['date']));
 	$curr_date = date('Y-m-d');
 	 
 	if($date < $curr_date){
-		$errors['date'] = 'End Date is Invalid!!' ; 
-	}
-}
-
+		$errors['date'] = 'End Date is Invalid' ; 
+	  }
+   }
 
 	if (empty($_POST['description'])) {
-		$errors['description'] = 'A Description is required';
+		$errors['description'] = 'Description is required';
 	}else{
         $description = $_POST['description'] ; 
 	}
+
 	if (!empty($_POST["cat"])){
 		$category = "" ;
 		$categories = $_POST['cat'] ; 
 		foreach($categories as $cat) {
 			$category = append_string ($category, $cat);
-			$category = append_string ($category, " ");
+			$category = append_string ($category, ", ");
 		}
 	}
 	
@@ -74,9 +78,9 @@ if (isset($_POST['submit'])) {
 			$errors['product_pic'] ="File is not an image.";
 			$uploadOk = 0;
 		}
-		$target_dir = "images/auction/";
+		$target_dir = "images/";
 		$target_file = $target_dir . basename($_FILES["product_pic"]["name"]);
-		$img_dir = $target_dir . basename($_FILES["product_pic"]["name"]);
+		$img_dir = $target_dir . $_SESSION['email'] . basename($_FILES["product_pic"]["name"]);
 		$uploadOk = 1;
 		$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
@@ -98,12 +102,12 @@ if (isset($_POST['submit'])) {
 				$errors['product_pic'] = "Sorry, your file was not uploaded.";
 			// if everything is ok, try to upload file
 			} else {
-					if (!move_uploaded_file($_FILES["product_pic"]["tmp_name"], $target_file)) {
-						$errors['proudct_pic'] = "Sorry, there was an error uploading your file.";
+					if (!move_uploaded_file($_FILES["product_pic"]["tmp_name"], $img_dir)) {
+						$errors['product_pic'] = "Sorry, there was an error uploading your file.";
 					}
 			}
 	} else{
-		$errors['product_pic'] = "Images is needed!!" ; 
+		$errors['product_pic'] = "Images is needed" ; 
 	}
 
 	
@@ -113,13 +117,9 @@ if (isset($_POST['submit'])) {
     
     
     if (!array_filter($errors)) {
-		if(!isset($_SESSION)) 
-		{ 
-			session_start(); 
-		} 
 		$user_id = $_SESSION['user_id'] ?? 60;
 		$cdate = $_POST['date'] ;
-        $sql =   "INSERT INTO auction_detail (title , description, url, category  ,user_id, due , base_amount) VALUES (?,?,?, ?, ?, ?	,?)" ;
+        $sql =   "INSERT INTO products (title , description, product_pic, category, user_id, end_date, base_amount) VALUES (?,?,?, ?, ?, ?	,?)" ;
         $stmt = mysqli_stmt_init($conn);
         if (!mysqli_stmt_prepare($stmt, $sql)) {
 			header("Location: add_new.php?error=sqlerror1");
@@ -130,7 +130,11 @@ if (isset($_POST['submit'])) {
 				echo "<h1> Error : " .mysqli_stmt_error($stmt) ."</h1>" ; 
 			}
 			else{
-			header('Location: home.php');
+				echo '<script type="text/javascript">'; 
+				echo 'alert("Your product has been uploaded");'; 
+				echo 'window.location.href = "home.php";';
+				echo '</script>';
+			//header('Location: home.php');
 			}
 			
 		}
@@ -192,16 +196,16 @@ if (isset($_POST['submit'])) {
 		<label>Auction Title</label>
 		<input type="text" name="title" value="<?php echo htmlspecialchars($title) ?>">
 		<div class="red-text"><?php echo $errors['title']; ?></div>
-		<label>Description of the Autction Item </label>
 
+		<label>Description of the Autction Item </label>
 		<input type="text" name="description" value="<?php echo htmlspecialchars($description) ?>">
 		<div class="red-text"><?php echo $errors['description']; ?></div>
 		
 		<label>Starting Bid  </label>
 		<input type="number" min= "1" max="10000" step="any" name="base_amount" value="<?php echo htmlspecialchars($base_amount) ?>">
 		<div class="red-text"><?php echo $errors['base_amount'] ; ?> </div>
-		<label>Enter The Duration of Auction : </label>
 
+		<label>Enter Auction End Date : </label>
 		<input type="date" name="date" value="<?php echo htmlspecialchars($date) ?>">
 		<div class="red-text"><?php echo $errors['date']; ?></div>
 		<p>
@@ -212,8 +216,8 @@ if (isset($_POST['submit'])) {
 		</p>
 		<p>
 			<label>
-				<input class="with-gap" name="cat[]" type="checkbox" value="Computer Hardware" />
-				<span>Computer Hardware</span>
+				<input class="with-gap" name="cat[]" type="checkbox" value="Computer" />
+				<span>Computer</span>
 			</label>
 		</p>
 		<p>
@@ -224,8 +228,8 @@ if (isset($_POST['submit'])) {
 		</p>
 		<p>
 			<label>
-				<input class="with-gap" name="cat[]" type="checkbox" value="Others" />
-				<span>Others</span>
+				<input class="with-gap" name="cat[]" type="checkbox" value="Civil" />
+				<span>Civil</span>
 			</label>
 		</p>
 		<label>Profile Pic</label>

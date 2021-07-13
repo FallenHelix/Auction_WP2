@@ -57,7 +57,7 @@ $user_id = $_SESSION['user_id'];
 		<div class="row">
 <?php
     // $sql = "SELECt * from bids LEFT OUTER JOIN   users on u_id = id where p_id = 66 " ;
-    $sql = "SELECT * from products WHERE user_id = ? and completed = 0" ; 
+    $sql = "SELECT * from products WHERE user_id = ? and completed = 1" ; 
 
     $stmt = mysqli_stmt_init($conn);
     if (!mysqli_stmt_prepare($stmt, $sql)) {
@@ -98,9 +98,7 @@ $user_id = $_SESSION['user_id'];
             
         </div>
         <div class="card-action">
-            <?php  echo '<a class="brand-text" href="delete_product.php?link=' . $row['id'] . '">Delete</a>'; ?>
-            <?php  echo '<a class="brand-text" href="end_auction.php?link=' . $row['id'] . '">End</a>'; ?>
-            <?php  echo '<a class="brand-text" style="padding-left:235px" href="Product_bids.php?link=' . $row['id'] . '">More Info</a>'; ?>
+            <?php  echo '<a class="brand-text" style="padding-left:375px" href="completed_product.php?link=' . $row['id'] . '">More Info</a>'; ?>
         </div>
     </div>
 </div>

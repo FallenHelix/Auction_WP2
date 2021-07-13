@@ -95,10 +95,9 @@ if (isset($_POST['submit'])) {
 
 		$name = $fname . " " . $lname;
 		if ($file_name == "") {
-			$img_dir = "images/users/$email.$file_name";
+			$img_dir = "images/default.png";
 		} else {
-			$img_dir = "images/users/$email.$file_name";
-
+			$img_dir = "images/$email.$file_name";
 		}
 		$sql = "INSERT INTO users (name, email, password, profile_pic) VALUES (?, ?, ?, ?)";
 		$stmt = mysqli_stmt_init($conn);
@@ -111,8 +110,14 @@ if (isset($_POST['submit'])) {
 
 			mysqli_stmt_bind_param($stmt, "ssss", $name, $email, $hashed_password, $img_dir);
 			mysqli_stmt_execute($stmt);
-			move_uploaded_file($file_tmp, $img_dir);
-			header('Location: login.php');
+			if ($file_name != "") {
+				move_uploaded_file($file_tmp, $img_dir);	
+			}
+			echo '<script type="text/javascript">'; 
+			echo 'alert("Your account has been created");'; 
+			echo 'window.location.href = "login.php";';
+			echo '</script>';
+			//header('Location: login.php');
 		}
 		mysqli_stmt_close($stmt);
 	}

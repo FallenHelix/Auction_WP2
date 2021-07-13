@@ -22,21 +22,6 @@ if (isset($_POST['submit'])) {
 		$password =  $_POST['password'];
 	}
 
-	if (!array_filter($errors)) {
-
-		login_user() ; 
-		if($login_result){
-			$_SESSION['logged_in'] = true ; 
-			header('Location: home.php');
-		} else{
-			$errors['email'] = 'Incorrect Email/Password';
-
-		}
-		
-	}
-}
-
-function login_user(){
 	require 'templates/db.php';
 	$email = $_POST['email'] ; 
 	$pass = $_POST['password'] ; 
@@ -45,18 +30,15 @@ function login_user(){
 	$login_sql = 'SELECT * from users where email = ? ' ;
 	$stmt = mysqli_stmt_init($conn) ;
 	if (!mysqli_stmt_prepare($stmt, $login_sql)) {
-		header("Location: login.php?error=sqlerror");
-		exit();
+		$errors['email'] = 'Email is incorrect';
 	} else {
 		mysqli_stmt_bind_param($stmt, "s", $email);
 		mysqli_stmt_execute($stmt);
 		$rowResult = mysqli_stmt_get_result($stmt) ;
 		if($row = mysqli_fetch_assoc($rowResult)){
 			$password_check = password_verify($pass,$row['password'] ) ;
-			var_dump($row) ; 
 			if($password_check==false) {
-				header("Location: login.php?error=invalidCredentians") ; 
-				exit() ;
+				$errors['password'] = 'Password is incorrect';
 			}
 			else if($password_check){
 				$_SESSION['email'] = $row['email'] ; 
@@ -71,14 +53,15 @@ function login_user(){
 			}
 
 		}else{
-			header("Location: login.php?error=nouser") ; 
-			exit() ; 
+			$errors['email'] = 'Email is incorrect';
 		}
-		
 	}
 
+	if (!array_filter($errors)) {
+		$_SESSION['logged_in'] = true ; 
+		header('Location: home.php');
+	}
 }
-
 
 ?>
 

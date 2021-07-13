@@ -87,40 +87,31 @@ if (!mysqli_stmt_prepare($stmt, $sql)) {
     </div>
 
     <div class="col s6">
-        <h3>Bids for this Product</h3>
+        <h3>Auction Won by : </h3>
         <?php
-        $bid_sql = "SELECT name, email, MAX(amount) as amount FROM bids WHERE p_id = ? GROUP BY name ORDER BY amount DESC LIMIT 5";
+        $bid_sql = "SELECT * FROM bids WHERE amount = (SELECT MAX(amount) FROM bids WHERE p_id = ?) and p_id = ?";
         if (!mysqli_stmt_prepare($stmt, $bid_sql)) {
             header("Location: login.php?error=sqlerror");
             exit();
         } else {
-            mysqli_stmt_bind_param($stmt, "s", $item_id);
+            mysqli_stmt_bind_param($stmt, "ss", $item_id, $item_id);
             mysqli_stmt_execute($stmt);
             $result = mysqli_stmt_get_result($stmt);
             $idx = 1 ; 
+            $row2 = mysqli_fetch_array($result, MYSQLI_BOTH);
+        }
             ?>
             <div class="white">
             <table style="width:100%">
             <tr>
-            <th>Index</th>
             <th>Name</th>
             <th>Email</th>
             <th>Amount</th>
-            <?php
-            while ($row2 = mysqli_fetch_array($result, MYSQLI_BOTH)) {
-        ?>
-                <tr>
-                <th><?php echo $idx;?></th>
-                <th><?php echo htmlspecialchars($row2['name']);?></th>
-                <th><?php echo htmlspecialchars($row2['email']);?></th>
-                <th><?php echo htmlspecialchars($row2['amount']);?></th>
-                </tr>
-
-        <?php
-        $idx ++ ; 
-            }
-        }
-        ?>
+            <tr>
+            <th><?php echo htmlspecialchars($row2['name']);?></th>
+            <th><?php echo htmlspecialchars($row2['email']);?></th>
+            <th><?php echo htmlspecialchars($row2['amount']);?></th>
+            </tr>
         </table>
         </div>
     </div>
